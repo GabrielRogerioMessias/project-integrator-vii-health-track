@@ -9,6 +9,6 @@ import lombok.*;
 @Setter
 @EqualsAndHashCode
 public class AccountCredentialsDTO {
-    private String username;
+    private String email;
     private String password;
 }
