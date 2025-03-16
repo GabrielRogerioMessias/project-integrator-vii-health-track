@@ -5,10 +5,9 @@ import org.projetointegrador.unifio.projectintegratorviibackend.models.dtos.Pati
 import org.projetointegrador.unifio.projectintegratorviibackend.models.dtos.PatientResponseDTO;
 import org.projetointegrador.unifio.projectintegratorviibackend.services.PatientService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @RestController
@@ -21,9 +20,16 @@ public class PatientController {
         this.patientService = patientService;
     }
 
+    @GetMapping
+    public ResponseEntity<List<PatientResponseDTO>> getAllPatients() {
+        List<PatientResponseDTO> patients = patientService.getAllPatients();
+        return ResponseEntity.ok().body(patients);
+    }
+
     @PostMapping
     public ResponseEntity<PatientResponseDTO> registerPatient(@RequestBody PatientRegistrationDTO registerDTO) {
         PatientResponseDTO patient = patientService.registerPatient(registerDTO);
         return ResponseEntity.ok(patient);
     }
+
 }

@@ -4,6 +4,7 @@ import org.projetointegrador.unifio.projectintegratorviibackend.models.Patient;
 import org.projetointegrador.unifio.projectintegratorviibackend.models.User;
 import org.projetointegrador.unifio.projectintegratorviibackend.models.dtos.PatientRegistrationDTO;
 import org.projetointegrador.unifio.projectintegratorviibackend.models.dtos.PatientResponseDTO;
+import org.projetointegrador.unifio.projectintegratorviibackend.models.enums.PermissionEnum;
 import org.projetointegrador.unifio.projectintegratorviibackend.repositories.PatientRepository;
 import org.projetointegrador.unifio.projectintegratorviibackend.repositories.UserRepository;
 import org.projetointegrador.unifio.projectintegratorviibackend.services.exceptions.UserAlreadyRegistered;
@@ -11,7 +12,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class PatientService {
@@ -37,7 +40,10 @@ public class PatientService {
         patient.setPhone(registerData.getPhone());
         patient.setCreatedAt(new Date());
         // creating a user with register data
+        List<PermissionEnum> permissions = new ArrayList<>();
+        permissions.add(PermissionEnum.PATIENT);
         User user = new User();
+        user.setPermissions(permissions);
         user.setEnabled(true);
         user.setEnabled(true);
         user.setAccountNonExpired(true);
@@ -51,6 +57,15 @@ public class PatientService {
         // persisting a new user in database, and a new patient
         userRepository.save(user);
         return new PatientResponseDTO(patient);
+    }
+
+    public List<PatientResponseDTO> getAllPatients() {
+        List<Patient> patientsList = patientRepository.findAll();
+        List<PatientResponseDTO> patientResponseDTOS = new ArrayList<>();
+        for (Patient x : patientsList) {
+            patientResponseDTOS.add(new PatientResponseDTO(x));
+        }
+        return patientResponseDTOS;
     }
 
     private PasswordEncoder encoderPassword() {
