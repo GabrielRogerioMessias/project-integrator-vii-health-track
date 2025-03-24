@@ -2,6 +2,8 @@ package org.projetointegrador.unifio.projectintegratorviibackend.models;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import org.projetointegrador.unifio.projectintegratorviibackend.models.enums.PermissionEnum;
 import org.springframework.security.core.GrantedAuthority;
