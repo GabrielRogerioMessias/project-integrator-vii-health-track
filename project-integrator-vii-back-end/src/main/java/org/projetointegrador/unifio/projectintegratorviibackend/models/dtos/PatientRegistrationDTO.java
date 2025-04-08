@@ -10,8 +10,6 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
 public class PatientRegistrationDTO {
     @Email(message = "please enter a valid email format")
     private String email;

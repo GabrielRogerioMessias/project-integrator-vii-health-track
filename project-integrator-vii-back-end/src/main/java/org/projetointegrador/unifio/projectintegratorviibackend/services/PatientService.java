@@ -43,7 +43,7 @@ public class PatientService {
         }
         List<String> errors;
         errors = validFields(registerData);
-        if (errors != null) {
+        if (!errors.isEmpty()) {
             throw new NullEntityFieldException(errors);
         }
         // creating a patient with registerData
