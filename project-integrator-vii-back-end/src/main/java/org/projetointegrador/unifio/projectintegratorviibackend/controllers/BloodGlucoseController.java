@@ -19,7 +19,7 @@ public class BloodGlucoseController {
 
     @DeleteMapping(value = "/{idGlucose}")
     public ResponseEntity<Void> deleteGlucose(@PathVariable Long idGlucose) {
-        bloodGlucoseService.deleteGlucoseRegister(idGlucose);
+        bloodGlucoseService.deleteGlucose(idGlucose);
         return ResponseEntity.noContent().build();
     }
 

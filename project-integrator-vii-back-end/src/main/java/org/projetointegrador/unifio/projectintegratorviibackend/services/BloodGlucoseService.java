@@ -31,7 +31,7 @@ public class BloodGlucoseService {
         this.userRepository = userRepository;
     }
 
-    public void deleteGlucoseRegister(Long idGlucose) {
+    public void deleteGlucose(Long idGlucose) {
         User loggedUser = authenticatedUser.getCurrentUser();
         BloodGlucose glucoseToDelete = bloodGlucoseRepository.findBloodGlucoseById(loggedUser.getPatient(), idGlucose).orElseThrow(() -> new ResourceNotFoundException(BloodGlucose.class, Long.toString(idGlucose)));
         loggedUser.getPatient().getGlucoseList().remove(glucoseToDelete);
