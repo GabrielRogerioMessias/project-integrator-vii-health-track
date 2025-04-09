@@ -9,6 +9,7 @@ import org.projetointegrador.unifio.projectintegratorviibackend.models.dtos.Bloo
 import org.projetointegrador.unifio.projectintegratorviibackend.repositories.BloodGlucoseRepository;
 import org.projetointegrador.unifio.projectintegratorviibackend.repositories.UserRepository;
 import org.projetointegrador.unifio.projectintegratorviibackend.services.exceptions.NullEntityFieldException;
+import org.projetointegrador.unifio.projectintegratorviibackend.services.exceptions.ResourceNotFoundException;
 import org.projetointegrador.unifio.projectintegratorviibackend.utils.AuthenticatedUser;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +33,7 @@ public class BloodGlucoseService {
 
     public void deleteGlucoseRegister(Long idGlucose) {
         User loggedUser = authenticatedUser.getCurrentUser();
-        BloodGlucose glucoseToDelete = bloodGlucoseRepository.findBloodGlucoseById(loggedUser.getPatient(), idGlucose).orElseThrow(() -> new RuntimeException());
+        BloodGlucose glucoseToDelete = bloodGlucoseRepository.findBloodGlucoseById(loggedUser.getPatient(), idGlucose).orElseThrow(() -> new ResourceNotFoundException(BloodGlucose.class, Long.toString(idGlucose)));
         loggedUser.getPatient().getGlucoseList().remove(glucoseToDelete);
         userRepository.save(loggedUser);
         bloodGlucoseRepository.delete(glucoseToDelete);
