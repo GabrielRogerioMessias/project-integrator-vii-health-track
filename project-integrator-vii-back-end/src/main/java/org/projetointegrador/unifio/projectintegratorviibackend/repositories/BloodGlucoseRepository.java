@@ -7,9 +7,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface BloodGlucoseRepository extends JpaRepository<BloodGlucose, Integer> {
 
     @Query(value = "SELECT BG FROM BloodGlucose BG WHERE BG.patient = :patient")
-    public List<BloodGlucose> listAllGlucoseOfUser(@Param(value = "patient") Patient patient);
+    public List<BloodGlucose> listAllGlucoseOfPatient(@Param(value = "patient") Patient patient);
+
+    @Query(value = "SELECT BG FROM BloodGlucose BG WHERE BG.id =:idBloodGlucose AND BG.patient = :patient")
+    public Optional<BloodGlucose> findBloodGlucoseById(@Param(value = "patient") Patient patient,
+                                                       @Param(value = "idBloodGlucose") Long idBloodGlucose);
 }

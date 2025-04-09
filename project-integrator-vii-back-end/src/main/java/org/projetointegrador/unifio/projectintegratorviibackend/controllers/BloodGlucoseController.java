@@ -17,6 +17,13 @@ public class BloodGlucoseController {
         this.bloodGlucoseService = bloodGlucoseService;
     }
 
+    @DeleteMapping(value = "/{idGlucose}")
+    public ResponseEntity<Void> deleteGlucose(@PathVariable Long idGlucose) {
+        bloodGlucoseService.deleteGlucoseRegister(idGlucose);
+        return ResponseEntity.noContent().build();
+    }
+
+
     @GetMapping
     public ResponseEntity<List<BloodGlucoseResponseDTO>> findGlucoseByCurrentUser() {
         return ResponseEntity.ok().body(bloodGlucoseService.findAllGlucoseByCurrentUser());

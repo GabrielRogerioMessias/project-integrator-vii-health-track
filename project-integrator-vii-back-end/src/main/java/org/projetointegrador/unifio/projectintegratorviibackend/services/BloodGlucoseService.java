@@ -30,9 +30,17 @@ public class BloodGlucoseService {
         this.userRepository = userRepository;
     }
 
+    public void deleteGlucoseRegister(Long idGlucose) {
+        User loggedUser = authenticatedUser.getCurrentUser();
+        BloodGlucose glucoseToDelete = bloodGlucoseRepository.findBloodGlucoseById(loggedUser.getPatient(), idGlucose).orElseThrow(() -> new RuntimeException());
+        loggedUser.getPatient().getGlucoseList().remove(glucoseToDelete);
+        userRepository.save(loggedUser);
+        bloodGlucoseRepository.delete(glucoseToDelete);
+    }
+
     public List<BloodGlucoseResponseDTO> findAllGlucoseByCurrentUser() {
         User loggedUser = authenticatedUser.getCurrentUser();
-        List<BloodGlucose> glucoseList = bloodGlucoseRepository.listAllGlucoseOfUser(loggedUser.getPatient());
+        List<BloodGlucose> glucoseList = bloodGlucoseRepository.listAllGlucoseOfPatient(loggedUser.getPatient());
         List<BloodGlucoseResponseDTO> responseDTOList = new ArrayList<>();
         for (BloodGlucose glucose : glucoseList) {
             responseDTOList.add(new BloodGlucoseResponseDTO(glucose));
