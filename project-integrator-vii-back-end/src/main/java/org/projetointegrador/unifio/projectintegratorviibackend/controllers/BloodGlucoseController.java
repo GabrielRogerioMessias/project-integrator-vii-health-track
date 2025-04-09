@@ -23,10 +23,14 @@ public class BloodGlucoseController {
         return ResponseEntity.noContent().build();
     }
 
-
     @GetMapping
     public ResponseEntity<List<BloodGlucoseResponseDTO>> findGlucoseByCurrentUser() {
         return ResponseEntity.ok().body(bloodGlucoseService.findAllGlucoseByCurrentUser());
+    }
+
+    @GetMapping(value = "/{idGlucose}")
+    public ResponseEntity<BloodGlucoseResponseDTO> findGlucoseById(@PathVariable Long idGlucose) {
+        return ResponseEntity.ok().body(bloodGlucoseService.findGlucoseById(idGlucose));
     }
 
     @PostMapping

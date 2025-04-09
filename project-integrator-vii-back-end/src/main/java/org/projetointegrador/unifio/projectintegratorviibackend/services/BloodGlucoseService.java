@@ -49,6 +49,12 @@ public class BloodGlucoseService {
         return responseDTOList;
     }
 
+    public BloodGlucoseResponseDTO findGlucoseById(Long idGlucose) {
+        User loggedUser = authenticatedUser.getCurrentUser();
+        BloodGlucose bloodGlucose = bloodGlucoseRepository.findBloodGlucoseById(loggedUser.getPatient(), idGlucose).orElseThrow(() -> new ResourceNotFoundException(BloodGlucose.class, Long.toString(idGlucose)));
+        return new BloodGlucoseResponseDTO(bloodGlucose);
+    }
+
     public BloodGlucoseResponseDTO registerGlucose(BloodGlucoseRegistrationDTO bloodGlucose) {
         User loggedUser = authenticatedUser.getCurrentUser();
         List<String> errors;
@@ -73,4 +79,6 @@ public class BloodGlucoseService {
                 .map(violation -> violation.getMessage())
                 .toList();
     }
+
+
 }

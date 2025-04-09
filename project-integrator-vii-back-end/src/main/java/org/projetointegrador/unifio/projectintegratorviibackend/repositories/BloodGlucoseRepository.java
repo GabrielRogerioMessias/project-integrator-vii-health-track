@@ -18,3 +18,4 @@ public interface BloodGlucoseRepository extends JpaRepository<BloodGlucose, Inte
     public Optional<BloodGlucose> findBloodGlucoseById(@Param(value = "patient") Patient patient,
                                                        @Param(value = "idBloodGlucose") Long idBloodGlucose);
 }
+
