@@ -4,10 +4,9 @@ import org.projetointegrador.unifio.projectintegratorviibackend.models.dtos.Bloo
 import org.projetointegrador.unifio.projectintegratorviibackend.models.dtos.BloodGlucoseResponseDTO;
 import org.projetointegrador.unifio.projectintegratorviibackend.services.BloodGlucoseService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/glucose")
@@ -16,6 +15,11 @@ public class BloodGlucoseController {
 
     public BloodGlucoseController(BloodGlucoseService bloodGlucoseService) {
         this.bloodGlucoseService = bloodGlucoseService;
+    }
+
+    @GetMapping
+    public ResponseEntity<List<BloodGlucoseResponseDTO>> findGlucoseByCurrentUser() {
+        return ResponseEntity.ok().body(bloodGlucoseService.findAllGlucoseByCurrentUser());
     }
 
     @PostMapping

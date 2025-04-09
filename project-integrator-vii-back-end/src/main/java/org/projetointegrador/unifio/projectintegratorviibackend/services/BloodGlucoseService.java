@@ -12,6 +12,7 @@ import org.projetointegrador.unifio.projectintegratorviibackend.services.excepti
 import org.projetointegrador.unifio.projectintegratorviibackend.utils.AuthenticatedUser;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -27,6 +28,16 @@ public class BloodGlucoseService {
         this.authenticatedUser = authenticatedUser;
         this.validator = validator;
         this.userRepository = userRepository;
+    }
+
+    public List<BloodGlucoseResponseDTO> findAllGlucoseByCurrentUser() {
+        User loggedUser = authenticatedUser.getCurrentUser();
+        List<BloodGlucose> glucoseList = bloodGlucoseRepository.listAllGlucoseOfUser(loggedUser.getPatient());
+        List<BloodGlucoseResponseDTO> responseDTOList = new ArrayList<>();
+        for (BloodGlucose glucose : glucoseList) {
+            responseDTOList.add(new BloodGlucoseResponseDTO(glucose));
+        }
+        return responseDTOList;
     }
 
     public BloodGlucoseResponseDTO registerGlucose(BloodGlucoseRegistrationDTO bloodGlucose) {
