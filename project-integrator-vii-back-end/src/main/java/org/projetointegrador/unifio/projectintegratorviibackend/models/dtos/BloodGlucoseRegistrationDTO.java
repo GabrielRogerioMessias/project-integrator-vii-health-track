@@ -18,5 +18,5 @@ public class BloodGlucoseRegistrationDTO {
     private LocalDateTime measurementTime;
     @Enumerated(EnumType.STRING)
     @NotNull(message = "Measurement context of BloodGlucose may not blank")
-    private MeasurementContext context;
+    private MeasurementContext context; 
 }

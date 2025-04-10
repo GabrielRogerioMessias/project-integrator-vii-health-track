@@ -12,10 +12,10 @@ import java.util.Optional;
 public interface BloodGlucoseRepository extends JpaRepository<BloodGlucose, Integer> {
 
     @Query(value = "SELECT BG FROM BloodGlucose BG WHERE BG.patient = :patient")
-    public List<BloodGlucose> listAllGlucoseOfPatient(@Param(value = "patient") Patient patient);
+    List<BloodGlucose> listAllGlucoseOfPatient(@Param(value = "patient") Patient patient);
 
     @Query(value = "SELECT BG FROM BloodGlucose BG WHERE BG.id =:idBloodGlucose AND BG.patient = :patient")
-    public Optional<BloodGlucose> findBloodGlucoseById(@Param(value = "patient") Patient patient,
-                                                       @Param(value = "idBloodGlucose") Long idBloodGlucose);
+    Optional<BloodGlucose> findBloodGlucoseById(@Param(value = "patient") Patient patient,
+                                                @Param(value = "idBloodGlucose") Long idBloodGlucose);
 }
 

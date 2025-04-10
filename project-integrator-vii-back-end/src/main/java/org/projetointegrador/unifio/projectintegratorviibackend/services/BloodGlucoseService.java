@@ -73,6 +73,26 @@ public class BloodGlucoseService {
         return new BloodGlucoseResponseDTO(bloodGlucoseRepository.save(newBloodGlucose));
     }
 
+    public BloodGlucoseResponseDTO updateGlucose(BloodGlucoseRegistrationDTO glucoseUpdated, Long idGlucose) {
+        User loggedUser = authenticatedUser.getCurrentUser();
+        BloodGlucose oldBloodGlucose = bloodGlucoseRepository.findBloodGlucoseById(loggedUser.getPatient(), idGlucose).orElseThrow(() -> new ResourceNotFoundException(BloodGlucose.class, Long.toString(idGlucose)));
+        this.updateFields(oldBloodGlucose, glucoseUpdated);
+        bloodGlucoseRepository.save(oldBloodGlucose);
+        return new BloodGlucoseResponseDTO(oldBloodGlucose);
+    }
+//todo
+    private void updateFields(BloodGlucose oldGlucose, BloodGlucoseRegistrationDTO updatedGlucose) {
+        if (updatedGlucose.getMeasurementTime() != null) {
+            oldGlucose.setMeasurementTime(updatedGlucose.getMeasurementTime());
+        }
+        if (updatedGlucose.getGlucoseValue() != null) {
+            oldGlucose.setGlucoseValue(updatedGlucose.getGlucoseValue());
+        }
+        if (updatedGlucose.getContext() != null) {
+            oldGlucose.setContext(updatedGlucose.getContext());
+        }
+    }
+
     private <T> List<String> validFields(T entity) {
         Set<ConstraintViolation<T>> violations = validator.validate(entity);
         return violations.stream()

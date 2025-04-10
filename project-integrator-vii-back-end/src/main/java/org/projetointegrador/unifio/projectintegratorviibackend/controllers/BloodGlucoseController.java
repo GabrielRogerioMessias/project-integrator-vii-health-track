@@ -35,7 +35,11 @@ public class BloodGlucoseController {
 
     @PostMapping
     public ResponseEntity<BloodGlucoseResponseDTO> registerGlucose(@RequestBody BloodGlucoseRegistrationDTO bloodGlucose) {
-        BloodGlucoseResponseDTO newBloodGlucose = bloodGlucoseService.registerGlucose(bloodGlucose);
-        return ResponseEntity.ok().body(newBloodGlucose);
+        return ResponseEntity.ok().body(bloodGlucoseService.registerGlucose(bloodGlucose));
+    }
+
+    @PutMapping(value = "/{idGlucose}")
+    public ResponseEntity<BloodGlucoseResponseDTO> updateGlucose(@RequestBody BloodGlucoseRegistrationDTO glucoseUpdated, @PathVariable Long idGlucose) {
+        return ResponseEntity.ok().body(bloodGlucoseService.updateGlucose(glucoseUpdated, idGlucose));
     }
 }
