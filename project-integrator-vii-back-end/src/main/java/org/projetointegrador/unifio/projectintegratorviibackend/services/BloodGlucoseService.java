@@ -58,8 +58,7 @@ public class BloodGlucoseService {
 
     public BloodGlucoseResponseDTO registerGlucose(BloodGlucoseRegistrationDTO bloodGlucose) {
         User loggedUser = authenticatedUser.getCurrentUser();
-        List<String> errors;
-        errors = validFields(bloodGlucose);
+        List<String> errors = validFields(bloodGlucose);
         if (!errors.isEmpty()) {
             throw new NullEntityFieldException(errors);
         }

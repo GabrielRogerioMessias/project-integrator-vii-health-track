@@ -47,8 +47,7 @@ public class BloodGlucoseController {
     @GetMapping(value = "/find-by-date")
     public ResponseEntity<List<BloodGlucoseResponseDTO>> getGlucoseByDate(
             @RequestParam LocalDateTime initialDate,
-            @RequestParam LocalDateTime endDate
-    ) {
+            @RequestParam LocalDateTime endDate) {
         return ResponseEntity.ok().body(bloodGlucoseService.getGlucoseByDate(initialDate, endDate));
     }
 }

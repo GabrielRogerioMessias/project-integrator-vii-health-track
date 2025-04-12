@@ -13,7 +13,6 @@ public class PressureRegistrationDTO {
     private Integer systolic;
     @NotNull(message = "Diastolic of Pressure may not blank")
     private Integer diastolic;
-    @NotNull(message = "HeartBeat of Pressure may not blank")
     private Integer heartbeat;
     @NotNull(message = "Measurement time of Pressure may not blank")
     private LocalDateTime measurementTime;
