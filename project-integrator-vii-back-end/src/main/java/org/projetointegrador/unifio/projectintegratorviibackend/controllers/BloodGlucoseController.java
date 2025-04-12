@@ -6,6 +6,7 @@ import org.projetointegrador.unifio.projectintegratorviibackend.services.BloodGl
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -41,5 +42,13 @@ public class BloodGlucoseController {
     @PutMapping(value = "/{idGlucose}")
     public ResponseEntity<BloodGlucoseResponseDTO> updateGlucose(@RequestBody BloodGlucoseRegistrationDTO glucoseUpdated, @PathVariable Long idGlucose) {
         return ResponseEntity.ok().body(bloodGlucoseService.updateGlucose(glucoseUpdated, idGlucose));
+    }
+
+    @GetMapping(value = "/find-by-date")
+    public ResponseEntity<List<BloodGlucoseResponseDTO>> getGlucoseByDate(
+            @RequestParam LocalDateTime initialDate,
+            @RequestParam LocalDateTime endDate
+    ) {
+        return ResponseEntity.ok().body(bloodGlucoseService.getGlucoseByDate(initialDate, endDate));
     }
 }

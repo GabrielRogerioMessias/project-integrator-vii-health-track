@@ -13,6 +13,7 @@ import org.projetointegrador.unifio.projectintegratorviibackend.services.excepti
 import org.projetointegrador.unifio.projectintegratorviibackend.utils.AuthenticatedUser;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -80,7 +81,8 @@ public class BloodGlucoseService {
         bloodGlucoseRepository.save(oldBloodGlucose);
         return new BloodGlucoseResponseDTO(oldBloodGlucose);
     }
-//todo
+
+    //todo
     private void updateFields(BloodGlucose oldGlucose, BloodGlucoseRegistrationDTO updatedGlucose) {
         if (updatedGlucose.getMeasurementTime() != null) {
             oldGlucose.setMeasurementTime(updatedGlucose.getMeasurementTime());
@@ -93,10 +95,20 @@ public class BloodGlucoseService {
         }
     }
 
+    public List<BloodGlucoseResponseDTO> getGlucoseByDate(LocalDateTime initialDate, LocalDateTime endDate) {
+        User loggedUser = authenticatedUser.getCurrentUser();
+        List<BloodGlucose> glucoseList = bloodGlucoseRepository.listGlucoseByDate(loggedUser.getPatient(), initialDate, endDate);
+        List<BloodGlucoseResponseDTO> glucoseResponseList = new ArrayList<>();
+        for (BloodGlucose glucose : glucoseList) {
+            glucoseResponseList.add(new BloodGlucoseResponseDTO(glucose));
+        }
+        return glucoseResponseList;
+    }
+
     private <T> List<String> validFields(T entity) {
         Set<ConstraintViolation<T>> violations = validator.validate(entity);
         return violations.stream()
-                .map(violation -> violation.getMessage())
+                .map(ConstraintViolation::getMessage)
                 .toList();
     }
 
