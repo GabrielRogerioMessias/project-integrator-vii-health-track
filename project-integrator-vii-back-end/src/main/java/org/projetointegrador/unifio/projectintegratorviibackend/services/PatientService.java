@@ -34,7 +34,11 @@ public class PatientService {
     }
 
     public PatientResponseDTO registerPatient(PatientRegistrationDTO registerData) {
-        Patient patient = new Patient();
+        Patient patient = patientRepository.findPatientByCPF(registerData.getCPF());
+        if (patient != null) {
+            throw new UserAlreadyRegistered(patient.getCPF());
+        }
+        patient = new Patient();
         User user = new User();
 
         User userVerify = userRepository.findByEmail(registerData.getEmail());
@@ -48,6 +52,7 @@ public class PatientService {
         }
         // creating a patient with registerData
         patient.setName(registerData.getName());
+        patient.setCPF(registerData.getCPF());
         patient.setBirth(registerData.getBirth());
         patient.setWeight(registerData.getWeight());
         patient.setPhone(registerData.getPhone());

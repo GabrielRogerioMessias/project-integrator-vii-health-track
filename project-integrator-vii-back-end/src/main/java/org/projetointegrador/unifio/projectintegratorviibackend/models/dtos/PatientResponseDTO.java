@@ -13,6 +13,7 @@ import java.util.Date;
 public class PatientResponseDTO {
     private Long id;
     private String name;
+    private String CPF;
     private Date birth;
     private String phone;
     private Double weight;
@@ -21,6 +22,7 @@ public class PatientResponseDTO {
     public PatientResponseDTO(Patient patient) {
         this.id = patient.getId();
         this.name = patient.getName();
+        this.CPF = patient.getCPF();
         this.birth = patient.getBirth();
         this.phone = patient.getPhone();
         this.weight = patient.getWeight();

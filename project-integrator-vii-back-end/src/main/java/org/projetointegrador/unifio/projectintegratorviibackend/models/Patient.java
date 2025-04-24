@@ -20,6 +20,7 @@ public class Patient {
     private Long id;
     private String name;
     private Date birth;
+    private String CPF;
     private String phone;
     private Double weight;
     private Date createdAt;
