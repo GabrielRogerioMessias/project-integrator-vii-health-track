@@ -51,6 +51,7 @@ public class SecurityConfig {
                         authorizeHttpRequests -> authorizeHttpRequests
                                 .requestMatchers("patients/**").permitAll()
                                 .requestMatchers("auth/login").permitAll()
+                                .requestMatchers("auth/verify").permitAll()
                                 // Exigir autenticação para todas as outras requisições
                                 .anyRequest().authenticated()
                 )

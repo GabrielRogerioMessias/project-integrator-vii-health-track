@@ -6,6 +6,7 @@ import org.projetointegrador.unifio.projectintegratorviibackend.models.dtos.secu
 import org.projetointegrador.unifio.projectintegratorviibackend.repositories.UserRepository;
 import org.projetointegrador.unifio.projectintegratorviibackend.security.jwt.JwtTokenProvider;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -46,6 +47,16 @@ public class UserService {
         } catch (Exception e) {
             throw new BadCredentialsException("Invalid username/password supplied");
         }
+    }
+
+    public User getUserByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    public void validateEmail(User user) {
+        user.setVerificationToken(null);
+        user.setVerified(true);
+        userRepository.save(user);
     }
 
     public boolean checkIfParamsIsNotNull(AccountCredentialsDTO dataLogin) {
