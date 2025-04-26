@@ -5,6 +5,7 @@ import org.projetointegrador.unifio.projectintegratorviibackend.security.excepti
 import org.projetointegrador.unifio.projectintegratorviibackend.security.exceptions.InvalidJwtAuthenticationException;
 import org.projetointegrador.unifio.projectintegratorviibackend.services.exceptions.NullEntityFieldException;
 import org.projetointegrador.unifio.projectintegratorviibackend.services.exceptions.ResourceNotFoundException;
+import org.projetointegrador.unifio.projectintegratorviibackend.services.exceptions.UnverifiedEmailException;
 import org.projetointegrador.unifio.projectintegratorviibackend.services.exceptions.UserAlreadyRegistered;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +27,7 @@ public class ControllerExceptionHandler {
     }
 
     @ExceptionHandler(InvalidJwtAuthenticationException.class)
-    public ResponseEntity<StandardError> cannotScheduleException(InvalidJwtAuthenticationException e, HttpServletRequest request) {
+    public ResponseEntity<StandardError> tokenNotIsValid(InvalidJwtAuthenticationException e, HttpServletRequest request) {
         String error = "Invalid JWT Authentication.";
         HttpStatus status = HttpStatus.FORBIDDEN;
         StandardError standardError = new StandardError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
@@ -34,7 +35,7 @@ public class ControllerExceptionHandler {
     }
 
     @ExceptionHandler(CustomBadCredentialsException.class)
-    public ResponseEntity<StandardError> cannotScheduleException(CustomBadCredentialsException e, HttpServletRequest request) {
+    public ResponseEntity<StandardError> invalidUsernameOrPassword(CustomBadCredentialsException e, HttpServletRequest request) {
         String error = "Username or Password Invalid.";
         HttpStatus status = HttpStatus.UNAUTHORIZED;
         StandardError standardError = new StandardError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
@@ -56,4 +57,14 @@ public class ControllerExceptionHandler {
         StandardError err = new StandardError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
         return ResponseEntity.status(status).body(err);
     }
+
+    @ExceptionHandler(UnverifiedEmailException.class)
+    public ResponseEntity<StandardError> unverifiedEmail(UnverifiedEmailException e, HttpServletRequest request) {
+        String error = "Email not verified.";
+        HttpStatus status = HttpStatus.FORBIDDEN;
+        StandardError err = new StandardError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(status).body(err);
+    }
+
+
 }
