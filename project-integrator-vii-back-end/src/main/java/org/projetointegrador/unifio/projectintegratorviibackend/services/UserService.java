@@ -1,7 +1,10 @@
 package org.projetointegrador.unifio.projectintegratorviibackend.services;
 
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validator;
 import org.projetointegrador.unifio.projectintegratorviibackend.models.User;
 import org.projetointegrador.unifio.projectintegratorviibackend.models.dtos.securityDTO.AccountCredentialsDTO;
+import org.projetointegrador.unifio.projectintegratorviibackend.models.dtos.securityDTO.ForgetPasswordDTO;
 import org.projetointegrador.unifio.projectintegratorviibackend.models.dtos.securityDTO.ResetPasswordRequest;
 import org.projetointegrador.unifio.projectintegratorviibackend.models.dtos.securityDTO.TokenDTO;
 import org.projetointegrador.unifio.projectintegratorviibackend.repositories.UserRepository;
@@ -19,6 +22,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Set;
+
 
 @Service
 public class UserService {
@@ -27,27 +33,41 @@ public class UserService {
     private final AuthenticationManager authenticationManager;
     private final EmailService emailService;
     private final EmailTokenUtil emailTokenUtil;
+    private final Validator validator;
 
-    public UserService(UserRepository userRepository, JwtTokenProvider tokenProvider, AuthenticationManager authenticationManager, EmailService emailService, EmailTokenUtil emailTokenUtil) {
+    public UserService(UserRepository userRepository, JwtTokenProvider tokenProvider,
+                       AuthenticationManager authenticationManager,
+                       EmailService emailService, EmailTokenUtil emailTokenUtil,
+                       Validator validator) {
         this.userRepository = userRepository;
         this.tokenProvider = tokenProvider;
         this.authenticationManager = authenticationManager;
         this.emailService = emailService;
         this.emailTokenUtil = emailTokenUtil;
-
+        this.validator = validator;
     }
 
-    public void forgetPassword(String email) {
-        User user = userRepository.findByEmail(email);
+    public void forgetPassword(ForgetPasswordDTO email) {
+        List<String> errors;
+        errors = validFields(email);
+        if (!errors.isEmpty()) {
+            throw new NullEntityFieldException(errors);
+        }
+        User user = userRepository.findByEmail(email.getEmail());
         if (user != null) {
-            String forgetPasswordToken = EmailTokenUtil.generateForgetToken(email);
+            String forgetPasswordToken = EmailTokenUtil.generateForgetToken(email.getEmail());
             user.setResetToken(forgetPasswordToken);
-            emailService.sendForgotPasswordEmail(email, forgetPasswordToken);
+            emailService.sendForgotPasswordEmail(email.getEmail(), forgetPasswordToken);
             userRepository.save(user);
         }
     }
 
     public void resetPassword(ResetPasswordRequest request) {
+        List<String> errors;
+        errors = validFields(request);
+        if (!errors.isEmpty()) {
+            throw new NullEntityFieldException(errors);
+        }
         User user = userRepository.findByEmail(emailTokenUtil.extractEmail(request.getToken()));
         if (user == null) {
             throw new UsernameNotFoundException("Email not found, please, click forgot your password again, and fill with a valid email.");
@@ -99,5 +119,12 @@ public class UserService {
 
     private PasswordEncoder encoderPassword() {
         return new BCryptPasswordEncoder();
+    }
+
+    private <T> List<String> validFields(T entity) {
+        Set<ConstraintViolation<T>> violations = validator.validate(entity);
+        return violations.stream()
+                .map(ConstraintViolation::getMessage)
+                .toList();
     }
 }

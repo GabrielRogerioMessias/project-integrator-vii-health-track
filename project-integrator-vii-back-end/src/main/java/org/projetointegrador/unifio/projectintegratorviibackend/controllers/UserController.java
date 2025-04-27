@@ -46,7 +46,7 @@ public class UserController {
 
     @PostMapping("/send-email-forget-password")
     public ResponseEntity<?> sendForgetPassword(@RequestBody ForgetPasswordDTO email) {
-        userService.forgetPassword(email.getEmail());
+        userService.forgetPassword(email);
         return ResponseEntity.status(HttpStatus.CREATED).body("Please check your inbox, and follow the instructions;");
     }
 

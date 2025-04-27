@@ -7,6 +7,6 @@ import lombok.Data;
 @Data
 public class ForgetPasswordDTO {
     @NotBlank
-    @Email
+    @Email(message = "please enter a valid email format")
     private String email;
 }
