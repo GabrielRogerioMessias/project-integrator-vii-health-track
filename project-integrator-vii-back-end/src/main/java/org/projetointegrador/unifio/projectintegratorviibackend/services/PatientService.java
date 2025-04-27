@@ -1,7 +1,6 @@
 package org.projetointegrador.unifio.projectintegratorviibackend.services;
 
 import jakarta.validation.ConstraintViolation;
-import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
 import org.projetointegrador.unifio.projectintegratorviibackend.models.Patient;
 import org.projetointegrador.unifio.projectintegratorviibackend.models.User;
@@ -10,6 +9,7 @@ import org.projetointegrador.unifio.projectintegratorviibackend.models.dtos.Pati
 import org.projetointegrador.unifio.projectintegratorviibackend.models.enums.PermissionEnum;
 import org.projetointegrador.unifio.projectintegratorviibackend.repositories.PatientRepository;
 import org.projetointegrador.unifio.projectintegratorviibackend.repositories.UserRepository;
+import org.projetointegrador.unifio.projectintegratorviibackend.security.jwt.EmailTokenUtil;
 import org.projetointegrador.unifio.projectintegratorviibackend.services.exceptions.NullEntityFieldException;
 import org.projetointegrador.unifio.projectintegratorviibackend.services.exceptions.UserAlreadyRegistered;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -26,14 +26,27 @@ public class PatientService {
     private final UserRepository userRepository;
     private final PatientRepository patientRepository;
     private final Validator validator;
+    private final EmailService emailService;
 
-    public PatientService(UserRepository userRepository, PatientRepository patientRepository, Validator validator) {
+    public PatientService(UserRepository userRepository, PatientRepository patientRepository, Validator validator, EmailService emailService) {
         this.userRepository = userRepository;
         this.patientRepository = patientRepository;
         this.validator = validator;
+        this.emailService = emailService;
     }
 
     public PatientResponseDTO registerPatient(PatientRegistrationDTO registerData) {
+        User userVerify = userRepository.findByEmail(registerData.getEmail());
+        if (userVerify != null) {
+            if (userVerify.isVerified()) {
+                throw new UserAlreadyRegistered(registerData.getEmail(), "already registered and verified!");
+            } else {
+                String verificationToken = EmailTokenUtil.generateValidationToken(userVerify.getEmail());
+                userVerify.setVerificationToken(verificationToken);
+                emailService.sendVerificationEmail(userVerify.getEmail(), verificationToken);
+                userRepository.save(userVerify);
+            }
+        }
         Patient patient = patientRepository.findPatientByCPF(registerData.getCPF());
         if (patient != null) {
             throw new UserAlreadyRegistered(patient.getCPF());
@@ -41,15 +54,14 @@ public class PatientService {
         patient = new Patient();
         User user = new User();
 
-        User userVerify = userRepository.findByEmail(registerData.getEmail());
-        if (userVerify != null) {
-            throw new UserAlreadyRegistered(User.class, registerData.getEmail());
-        }
         List<String> errors;
         errors = validFields(registerData);
         if (!errors.isEmpty()) {
             throw new NullEntityFieldException(errors);
         }
+        //generate a token verify
+        String verificationToken = EmailTokenUtil.generateValidationToken(registerData.getEmail());
+        user.setVerificationToken(verificationToken);
         // creating a patient with registerData
         patient.setName(registerData.getName());
         patient.setCPF(registerData.getCPF());
@@ -73,6 +85,7 @@ public class PatientService {
         user.setPatient(patient);
         patient.setUser(user);
         // persisting a new user in database, and a new patient
+        emailService.sendVerificationEmail(registerData.getEmail(), verificationToken);
         userRepository.save(user);
         return new PatientResponseDTO(patient);
 
@@ -94,7 +107,7 @@ public class PatientService {
     private <T> List<String> validFields(T entity) {
         Set<ConstraintViolation<T>> violations = validator.validate(entity);
         return violations.stream()
-                .map(violation -> violation.getMessage())
+                .map(ConstraintViolation::getMessage)
                 .toList();
     }
 }

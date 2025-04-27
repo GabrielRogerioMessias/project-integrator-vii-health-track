@@ -35,6 +35,11 @@ public class User implements UserDetails {
     @Column(name = "credentials_non_expired")
     private Boolean credentialsNonExpired;
     private Boolean enabled;
+    // for e-mail validation
+    private String verificationToken;
+    private boolean isVerified;
+    @Column(name = "reset_token")
+    private String resetToken;
 
     @ElementCollection(targetClass = PermissionEnum.class, fetch = FetchType.EAGER)
     @CollectionTable(

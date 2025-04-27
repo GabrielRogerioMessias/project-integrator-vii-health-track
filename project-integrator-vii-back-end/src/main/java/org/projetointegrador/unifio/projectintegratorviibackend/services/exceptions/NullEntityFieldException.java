@@ -6,4 +6,8 @@ public class NullEntityFieldException extends RuntimeException {
     public NullEntityFieldException(List<String> listErrors) {
         super(listErrors.toString());
     }
+
+    public NullEntityFieldException(String err) {
+        super(err);
+    }
 }

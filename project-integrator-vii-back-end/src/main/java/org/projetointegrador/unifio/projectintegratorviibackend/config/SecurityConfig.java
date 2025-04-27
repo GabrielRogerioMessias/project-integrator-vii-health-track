@@ -4,6 +4,7 @@ import org.projetointegrador.unifio.projectintegratorviibackend.security.jwt.Jwt
 import org.projetointegrador.unifio.projectintegratorviibackend.security.jwt.JwtTokenProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -50,7 +51,12 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         authorizeHttpRequests -> authorizeHttpRequests
                                 .requestMatchers("patients/**").permitAll()
+                                //permitidas
+                                .requestMatchers(HttpMethod.POST, "/patients/register-patient").permitAll()
                                 .requestMatchers("auth/login").permitAll()
+                                .requestMatchers("auth/verify").permitAll()
+                                .requestMatchers(HttpMethod.POST, "auth/send-email-forget-password").permitAll()
+                                .requestMatchers(HttpMethod.GET, "auth/verify-forget").permitAll()
                                 // Exigir autenticação para todas as outras requisições
                                 .anyRequest().authenticated()
                 )
