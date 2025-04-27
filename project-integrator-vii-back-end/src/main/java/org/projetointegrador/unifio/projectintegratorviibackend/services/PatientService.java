@@ -1,7 +1,6 @@
 package org.projetointegrador.unifio.projectintegratorviibackend.services;
 
 import jakarta.validation.ConstraintViolation;
-import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
 import org.projetointegrador.unifio.projectintegratorviibackend.models.Patient;
 import org.projetointegrador.unifio.projectintegratorviibackend.models.User;
@@ -108,7 +107,7 @@ public class PatientService {
     private <T> List<String> validFields(T entity) {
         Set<ConstraintViolation<T>> violations = validator.validate(entity);
         return violations.stream()
-                .map(violation -> violation.getMessage())
+                .map(ConstraintViolation::getMessage)
                 .toList();
     }
 }

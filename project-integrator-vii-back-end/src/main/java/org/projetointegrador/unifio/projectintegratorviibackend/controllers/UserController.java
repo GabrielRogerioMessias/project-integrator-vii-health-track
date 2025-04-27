@@ -3,13 +3,13 @@ package org.projetointegrador.unifio.projectintegratorviibackend.controllers;
 
 import org.projetointegrador.unifio.projectintegratorviibackend.models.User;
 import org.projetointegrador.unifio.projectintegratorviibackend.models.dtos.securityDTO.AccountCredentialsDTO;
+import org.projetointegrador.unifio.projectintegratorviibackend.models.dtos.securityDTO.ForgetPasswordDTO;
+import org.projetointegrador.unifio.projectintegratorviibackend.models.dtos.securityDTO.ResetPasswordRequest;
 import org.projetointegrador.unifio.projectintegratorviibackend.models.dtos.securityDTO.TokenDTO;
-import org.projetointegrador.unifio.projectintegratorviibackend.security.exceptions.CustomBadCredentialsException;
 import org.projetointegrador.unifio.projectintegratorviibackend.security.jwt.EmailTokenUtil;
 import org.projetointegrador.unifio.projectintegratorviibackend.services.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -42,5 +42,17 @@ public class UserController {
         }
         userService.validateEmail(user);
         return ResponseEntity.status(HttpStatus.CREATED).body("Email successfully verified!");
+    }
+
+    @PostMapping("/send-email-forget-password")
+    public ResponseEntity<?> sendForgetPassword(@RequestBody ForgetPasswordDTO email) {
+        userService.forgetPassword(email.getEmail());
+        return ResponseEntity.status(HttpStatus.CREATED).body("Please check your inbox, and follow the instructions;");
+    }
+
+    @GetMapping(value = "verify-forget")
+    public ResponseEntity<?> createNewPassword(@RequestBody ResetPasswordRequest request) {
+        userService.resetPassword(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body("Password successfully verified.");
     }
 }

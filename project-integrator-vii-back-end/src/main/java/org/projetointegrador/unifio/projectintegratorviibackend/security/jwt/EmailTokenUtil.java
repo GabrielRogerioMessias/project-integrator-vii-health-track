@@ -24,6 +24,15 @@ public class EmailTokenUtil {
                 .compact();
     }
 
+    public static String generateForgetToken(String email) {
+        return Jwts.builder()
+                .setSubject(email)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + 900_000))
+                .signWith(SECRET_KEY, SignatureAlgorithm.HS256)
+                .compact();
+    }
+
     private Date extractExpiration(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(SECRET_KEY)

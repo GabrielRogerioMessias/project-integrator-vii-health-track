@@ -18,7 +18,8 @@ public class EmailService {
         this.mailSender = mailSender;
     }
 
-    private void sendEmail(String email, String token, String subject, String path, String message) {
+    private void sendEmail(String email, String token, String subject, String path, String message, boolean model) {
+        String btn = model ? "Verificar Email" : "Redefinir Senha";
         try {
             String actionUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
                     .path(path)
@@ -29,13 +30,13 @@ public class EmailService {
                         <h1 style="color: #333;">%s</h1>
                         <p style="font-size: 16px; color: #555;">%s</p>
                         <a href="%s" style="display: inline-block; margin: 20px 0; padding: 10px 20px; font-size: 16px; color: #fff; background-color: #007bff; text-decoration: none; border-radius: 4px;">
-                            Confirmar e-mail
+                           %s
                         </a>
                         <p style="font-size: 14px; color: #777;">Se o botão não funcionar, copie e cole este link no seu navegador:</p>
                         <p style="font-size: 14px; color: #007bff;">%s</p>
                         <p style="font-size: 12px; color: #aaa;">Esta é uma mensagem automática. Por favor, não responda.</p>
                     </div>
-                    """.formatted(subject, message, actionUrl, actionUrl);
+                    """.formatted(subject, message, actionUrl, btn, actionUrl);
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
             helper.setTo(email);
@@ -53,14 +54,15 @@ public class EmailService {
         String subject = "Verificação de e-mail";
         String path = "/api/auth/verify";
         String message = "Clique no botão abaixo para verificar seu endereço de e-mail";
-        sendEmail(email, verificationToken, subject, path, message);
+        sendEmail(email, verificationToken, subject, path, message, true);
     }
 
     public void sendForgotPasswordEmail(String email, String resetToken) {
-        String subject = "Validar - Esqueceu sua senha";
-        String path = "/api/auth/verify";
-        String message = "Clique em RESETAR para resetar sua senha";
-        sendEmail(email, resetToken, subject, path, message);
+        String subject = "Esqueceu sua senha.";
+        String path = "/api/auth/verify-forget";
+        String message = "Clique em REDEFINIR SENHA e siga as instruções para redefinir sua senha";
+        sendEmail(email, resetToken, subject, path, message, false);
     }
+
 
 }

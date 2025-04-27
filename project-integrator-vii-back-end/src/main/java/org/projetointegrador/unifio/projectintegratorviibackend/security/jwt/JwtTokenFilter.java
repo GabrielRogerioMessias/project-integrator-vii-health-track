@@ -53,7 +53,7 @@ public class JwtTokenFilter extends GenericFilterBean {
             StandardError error = new StandardError(
                     Instant.now(),
                     HttpStatus.FORBIDDEN.value(),
-                    "Token expirado",
+                    "Token expirado, faça login novamente.",
                     ex.getMessage(),
                     ((HttpServletRequest) request).getRequestURI()
             );
