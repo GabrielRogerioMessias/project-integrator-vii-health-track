@@ -24,6 +24,7 @@ public class Patient {
     private String CPF;
     private String phone;
     private Double weight;
+    private Double height;
     private Date createdAt;
 
     @OneToOne

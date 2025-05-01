@@ -2,6 +2,7 @@ package org.projetointegrador.unifio.projectintegratorviibackend.services;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
+import org.projetointegrador.unifio.projectintegratorviibackend.models.mappers.PatientMapper;
 import org.projetointegrador.unifio.projectintegratorviibackend.models.patient.Patient;
 import org.projetointegrador.unifio.projectintegratorviibackend.models.User;
 import org.projetointegrador.unifio.projectintegratorviibackend.models.patient.PatientRegistrationDTO;
@@ -29,17 +30,16 @@ public class PatientService {
     private final PatientRepository patientRepository;
     private final Validator validator;
     private final EmailService emailService;
+    private final PatientMapper patientMapper;
     private final AuthenticatedUser authenticatedUser;
 
-    public PatientService(UserRepository userRepository,
-                          PatientRepository patientRepository,
-                          Validator validator, EmailService emailService,
-                          AuthenticatedUser authenticatedUser) {
+    public PatientService(UserRepository userRepository, PatientRepository patientRepository, Validator validator, EmailService emailService, AuthenticatedUser authenticatedUser, PatientMapper patientMapper) {
         this.userRepository = userRepository;
         this.patientRepository = patientRepository;
         this.validator = validator;
         this.emailService = emailService;
         this.authenticatedUser = authenticatedUser;
+        this.patientMapper = patientMapper;
     }
 
     public PatientResponseDTO registerPatient(PatientRegistrationDTO registerData) {
@@ -94,15 +94,47 @@ public class PatientService {
         // persisting a new user in database, and a new patient
         emailService.sendVerificationEmail(registerData.getEmail(), verificationToken);
         userRepository.save(user);
-        return new PatientResponseDTO(patient);
+        return patientMapper.toResponseDTO(patient);
+    }
 
+    public PatientResponseDTO updatePatient(PatientUpdateDTO uptPatient) {
+        Patient authPatient = authenticatedUser.getCurrentUser().getPatient();
+        List<String> errors;
+        errors = this.validFields(uptPatient);
+        if (!errors.isEmpty()) {
+            throw new NullEntityFieldException(errors);
+        }
+        this.updateFields(authPatient, uptPatient);
+        Patient uptP = patientRepository.save(authPatient);
+        return patientMapper.toResponseDTO(uptP);
+    }
+
+    private void updateFields(Patient oldPatient, PatientUpdateDTO uptPatient) {
+        if (uptPatient.getPhone() != null && !uptPatient.getName().isBlank()) {
+            oldPatient.setName(uptPatient.getName());
+        }
+        if (!(uptPatient.getBirth() == null)) {
+            oldPatient.setBirth(uptPatient.getBirth());
+        }
+        if (uptPatient.getCPF() != null) {
+            oldPatient.setCPF(uptPatient.getCPF());
+        }
+        if (uptPatient.getPhone() != null && !uptPatient.getPhone().isEmpty()) {
+            oldPatient.setPhone(uptPatient.getPhone());
+        }
+        if (!(uptPatient.getWeight() == null)) {
+            oldPatient.setWeight(uptPatient.getWeight());
+        }
+        if (!(uptPatient.getHeight() == null)) {
+            oldPatient.setHeight(uptPatient.getHeight());
+        }
     }
 
     public List<PatientResponseDTO> getAllPatients() {
         List<Patient> patientsList = patientRepository.findAll();
         List<PatientResponseDTO> patientResponseDTOS = new ArrayList<>();
         for (Patient x : patientsList) {
-            patientResponseDTOS.add(new PatientResponseDTO(x));
+            patientResponseDTOS.add(patientMapper.toResponseDTO(x));
         }
         return patientResponseDTOS;
     }
@@ -113,8 +145,6 @@ public class PatientService {
 
     private <T> List<String> validFields(T entity) {
         Set<ConstraintViolation<T>> violations = validator.validate(entity);
-        return violations.stream()
-                .map(ConstraintViolation::getMessage)
-                .toList();
+        return violations.stream().map(ConstraintViolation::getMessage).toList();
     }
 }
