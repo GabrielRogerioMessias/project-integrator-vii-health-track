@@ -1,8 +1,8 @@
-package org.projetointegrador.unifio.projectintegratorviibackend.models;
+package org.projetointegrador.unifio.projectintegratorviibackend.models.glucose;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.projetointegrador.unifio.projectintegratorviibackend.models.patient.Patient;
 import org.projetointegrador.unifio.projectintegratorviibackend.models.enums.MeasurementContext;
 
 import java.time.LocalDateTime;

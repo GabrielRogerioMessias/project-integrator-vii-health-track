@@ -1,9 +1,8 @@
-package org.projetointegrador.unifio.projectintegratorviibackend.models.dtos;
+package org.projetointegrador.unifio.projectintegratorviibackend.models.patient;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.projetointegrador.unifio.projectintegratorviibackend.models.Patient;
 
 import java.util.Date;
 

@@ -1,10 +1,6 @@
-package org.projetointegrador.unifio.projectintegratorviibackend.models.dtos;
+package org.projetointegrador.unifio.projectintegratorviibackend.models.glucose;
 
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import org.projetointegrador.unifio.projectintegratorviibackend.models.BloodGlucose;
 import org.projetointegrador.unifio.projectintegratorviibackend.models.enums.MeasurementContext;
 
 import java.time.LocalDateTime;

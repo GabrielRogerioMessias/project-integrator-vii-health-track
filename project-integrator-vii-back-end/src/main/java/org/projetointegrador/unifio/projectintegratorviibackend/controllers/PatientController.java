@@ -1,8 +1,7 @@
 package org.projetointegrador.unifio.projectintegratorviibackend.controllers;
 
-import org.projetointegrador.unifio.projectintegratorviibackend.models.Patient;
-import org.projetointegrador.unifio.projectintegratorviibackend.models.dtos.PatientRegistrationDTO;
-import org.projetointegrador.unifio.projectintegratorviibackend.models.dtos.PatientResponseDTO;
+import org.projetointegrador.unifio.projectintegratorviibackend.models.patient.PatientRegistrationDTO;
+import org.projetointegrador.unifio.projectintegratorviibackend.models.patient.PatientResponseDTO;
 import org.projetointegrador.unifio.projectintegratorviibackend.services.PatientService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

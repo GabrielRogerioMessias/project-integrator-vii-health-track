@@ -2,10 +2,10 @@ package org.projetointegrador.unifio.projectintegratorviibackend.services;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
-import org.projetointegrador.unifio.projectintegratorviibackend.models.BloodGlucose;
+import org.projetointegrador.unifio.projectintegratorviibackend.models.glucose.BloodGlucose;
 import org.projetointegrador.unifio.projectintegratorviibackend.models.User;
-import org.projetointegrador.unifio.projectintegratorviibackend.models.dtos.BloodGlucoseRegistrationDTO;
-import org.projetointegrador.unifio.projectintegratorviibackend.models.dtos.BloodGlucoseResponseDTO;
+import org.projetointegrador.unifio.projectintegratorviibackend.models.glucose.BloodGlucoseRegistrationDTO;
+import org.projetointegrador.unifio.projectintegratorviibackend.models.glucose.BloodGlucoseResponseDTO;
 import org.projetointegrador.unifio.projectintegratorviibackend.repositories.BloodGlucoseRepository;
 import org.projetointegrador.unifio.projectintegratorviibackend.repositories.UserRepository;
 import org.projetointegrador.unifio.projectintegratorviibackend.services.exceptions.NullEntityFieldException;

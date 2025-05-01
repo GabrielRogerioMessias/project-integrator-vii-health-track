@@ -2,10 +2,10 @@ package org.projetointegrador.unifio.projectintegratorviibackend.services;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
-import org.projetointegrador.unifio.projectintegratorviibackend.models.Pressure;
+import org.projetointegrador.unifio.projectintegratorviibackend.models.pressure.Pressure;
 import org.projetointegrador.unifio.projectintegratorviibackend.models.User;
-import org.projetointegrador.unifio.projectintegratorviibackend.models.dtos.PressureRegistrationDTO;
-import org.projetointegrador.unifio.projectintegratorviibackend.models.dtos.PressureResponseDTO;
+import org.projetointegrador.unifio.projectintegratorviibackend.models.pressure.PressureRegistrationDTO;
+import org.projetointegrador.unifio.projectintegratorviibackend.models.pressure.PressureResponseDTO;
 import org.projetointegrador.unifio.projectintegratorviibackend.repositories.PressureRepository;
 import org.projetointegrador.unifio.projectintegratorviibackend.repositories.UserRepository;
 import org.projetointegrador.unifio.projectintegratorviibackend.services.exceptions.NullEntityFieldException;

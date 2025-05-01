@@ -2,16 +2,18 @@ package org.projetointegrador.unifio.projectintegratorviibackend.services;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
-import org.projetointegrador.unifio.projectintegratorviibackend.models.Patient;
+import org.projetointegrador.unifio.projectintegratorviibackend.models.patient.Patient;
 import org.projetointegrador.unifio.projectintegratorviibackend.models.User;
-import org.projetointegrador.unifio.projectintegratorviibackend.models.dtos.PatientRegistrationDTO;
-import org.projetointegrador.unifio.projectintegratorviibackend.models.dtos.PatientResponseDTO;
+import org.projetointegrador.unifio.projectintegratorviibackend.models.patient.PatientRegistrationDTO;
+import org.projetointegrador.unifio.projectintegratorviibackend.models.patient.PatientResponseDTO;
 import org.projetointegrador.unifio.projectintegratorviibackend.models.enums.PermissionEnum;
+import org.projetointegrador.unifio.projectintegratorviibackend.models.patient.PatientUpdateDTO;
 import org.projetointegrador.unifio.projectintegratorviibackend.repositories.PatientRepository;
 import org.projetointegrador.unifio.projectintegratorviibackend.repositories.UserRepository;
 import org.projetointegrador.unifio.projectintegratorviibackend.security.jwt.EmailTokenUtil;
 import org.projetointegrador.unifio.projectintegratorviibackend.services.exceptions.NullEntityFieldException;
 import org.projetointegrador.unifio.projectintegratorviibackend.services.exceptions.UserAlreadyRegistered;
+import org.projetointegrador.unifio.projectintegratorviibackend.utils.AuthenticatedUser;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -27,12 +29,17 @@ public class PatientService {
     private final PatientRepository patientRepository;
     private final Validator validator;
     private final EmailService emailService;
+    private final AuthenticatedUser authenticatedUser;
 
-    public PatientService(UserRepository userRepository, PatientRepository patientRepository, Validator validator, EmailService emailService) {
+    public PatientService(UserRepository userRepository,
+                          PatientRepository patientRepository,
+                          Validator validator, EmailService emailService,
+                          AuthenticatedUser authenticatedUser) {
         this.userRepository = userRepository;
         this.patientRepository = patientRepository;
         this.validator = validator;
         this.emailService = emailService;
+        this.authenticatedUser = authenticatedUser;
     }
 
     public PatientResponseDTO registerPatient(PatientRegistrationDTO registerData) {

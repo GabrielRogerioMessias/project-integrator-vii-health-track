@@ -1,10 +1,8 @@
-package org.projetointegrador.unifio.projectintegratorviibackend.models.dtos;
+package org.projetointegrador.unifio.projectintegratorviibackend.models.pressure;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.projetointegrador.unifio.projectintegratorviibackend.models.Pressure;
 
 import java.time.LocalDateTime;
 

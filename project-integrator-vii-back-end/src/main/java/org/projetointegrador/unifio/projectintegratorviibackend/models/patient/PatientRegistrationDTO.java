@@ -1,4 +1,4 @@
-package org.projetointegrador.unifio.projectintegratorviibackend.models.dtos;
+package org.projetointegrador.unifio.projectintegratorviibackend.models.patient;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

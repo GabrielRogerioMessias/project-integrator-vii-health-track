@@ -3,6 +3,7 @@ package org.projetointegrador.unifio.projectintegratorviibackend.models;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
+import org.projetointegrador.unifio.projectintegratorviibackend.models.patient.Patient;
 import org.projetointegrador.unifio.projectintegratorviibackend.models.enums.PermissionEnum;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
