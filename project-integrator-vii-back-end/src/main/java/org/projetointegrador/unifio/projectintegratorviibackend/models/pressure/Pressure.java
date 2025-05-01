@@ -1,10 +1,8 @@
-package org.projetointegrador.unifio.projectintegratorviibackend.models;
+package org.projetointegrador.unifio.projectintegratorviibackend.models.pressure;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import org.projetointegrador.unifio.projectintegratorviibackend.models.enums.MeasurementContext;
+import org.projetointegrador.unifio.projectintegratorviibackend.models.patient.Patient;
 
 import java.time.LocalDateTime;
 

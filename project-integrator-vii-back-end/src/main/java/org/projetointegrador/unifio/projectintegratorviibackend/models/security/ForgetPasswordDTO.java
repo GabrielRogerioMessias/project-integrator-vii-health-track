@@ -1,4 +1,4 @@
-package org.projetointegrador.unifio.projectintegratorviibackend.models.dtos.securityDTO;
+package org.projetointegrador.unifio.projectintegratorviibackend.models.security;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

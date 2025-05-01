@@ -1,8 +1,11 @@
-package org.projetointegrador.unifio.projectintegratorviibackend.models;
+package org.projetointegrador.unifio.projectintegratorviibackend.models.patient;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
+import org.projetointegrador.unifio.projectintegratorviibackend.models.glucose.BloodGlucose;
+import org.projetointegrador.unifio.projectintegratorviibackend.models.pressure.Pressure;
+import org.projetointegrador.unifio.projectintegratorviibackend.models.User;
 
 import java.util.Date;
 import java.util.List;
@@ -12,8 +15,6 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
 public class Patient {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,6 +24,7 @@ public class Patient {
     private String CPF;
     private String phone;
     private Double weight;
+    private Double height;
     private Date createdAt;
 
     @OneToOne

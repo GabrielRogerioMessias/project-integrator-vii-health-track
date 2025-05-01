@@ -2,10 +2,11 @@ package org.projetointegrador.unifio.projectintegratorviibackend.services;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
-import org.projetointegrador.unifio.projectintegratorviibackend.models.Pressure;
+import org.projetointegrador.unifio.projectintegratorviibackend.models.mappers.PressureMapper;
+import org.projetointegrador.unifio.projectintegratorviibackend.models.pressure.Pressure;
 import org.projetointegrador.unifio.projectintegratorviibackend.models.User;
-import org.projetointegrador.unifio.projectintegratorviibackend.models.dtos.PressureRegistrationDTO;
-import org.projetointegrador.unifio.projectintegratorviibackend.models.dtos.PressureResponseDTO;
+import org.projetointegrador.unifio.projectintegratorviibackend.models.pressure.PressureRegistrationDTO;
+import org.projetointegrador.unifio.projectintegratorviibackend.models.pressure.PressureResponseDTO;
 import org.projetointegrador.unifio.projectintegratorviibackend.repositories.PressureRepository;
 import org.projetointegrador.unifio.projectintegratorviibackend.repositories.UserRepository;
 import org.projetointegrador.unifio.projectintegratorviibackend.services.exceptions.NullEntityFieldException;
@@ -25,12 +26,14 @@ public class PressureService {
     private final AuthenticatedUser authenticatedUser;
     private final Validator validator;
     private final UserRepository userRepository;
+    private final PressureMapper pressureMapper;
 
-    public PressureService(PressureRepository pressureRepository, AuthenticatedUser authenticatedUser, Validator validator, UserRepository userRepository) {
+    public PressureService(PressureRepository pressureRepository, AuthenticatedUser authenticatedUser, Validator validator, UserRepository userRepository, PressureMapper pressureMapper) {
         this.pressureRepository = pressureRepository;
         this.authenticatedUser = authenticatedUser;
         this.validator = validator;
         this.userRepository = userRepository;
+        this.pressureMapper = pressureMapper;
     }
 
 
@@ -43,17 +46,16 @@ public class PressureService {
     public List<PressureResponseDTO> findAllPressureByCurrentUser() {
         User loggedUser = authenticatedUser.getCurrentUser();
         List<Pressure> pressureList = pressureRepository.listAllPressureOfPatient(loggedUser.getPatient());
-        List<PressureResponseDTO> pressureResponseList = new ArrayList<>();
-        for (Pressure pressure : pressureList) {
-            pressureResponseList.add(new PressureResponseDTO(pressure));
-        }
-        return pressureResponseList;
+        return pressureList
+                .stream()
+                .map(pressureMapper::toResponseDTO)
+                .toList();
     }
 
     public PressureResponseDTO findPressureById(Long idPressure) {
         User loggedUser = authenticatedUser.getCurrentUser();
         Pressure pressure = pressureRepository.findPressureById(loggedUser.getPatient(), idPressure).orElseThrow(() -> new ResourceNotFoundException(Pressure.class, Long.toString(idPressure)));
-        return new PressureResponseDTO(pressure);
+        return pressureMapper.toResponseDTO(pressure);
     }
 
     public PressureResponseDTO registerPressure(PressureRegistrationDTO pressure) {
@@ -70,25 +72,23 @@ public class PressureService {
         newPressure.setDiastolic(pressure.getDiastolic());
         loggedUser.getPatient().getPressureList().add(newPressure);
         userRepository.save(loggedUser);
-        return new PressureResponseDTO(pressureRepository.save(newPressure));
+        return pressureMapper.toResponseDTO(pressureRepository.save(newPressure));
     }
 
     public PressureResponseDTO updatePressure(PressureRegistrationDTO updatedPressure, Long idPressure) {
         User loggedUser = authenticatedUser.getCurrentUser();
         Pressure oldPressure = pressureRepository.findPressureById(loggedUser.getPatient(), idPressure).orElseThrow(() -> new ResourceNotFoundException(Pressure.class, Long.toString(idPressure)));
         this.updateFields(oldPressure, updatedPressure);
-        pressureRepository.save(oldPressure);
-        return new PressureResponseDTO(oldPressure);
+        return pressureMapper.toResponseDTO(pressureRepository.save(oldPressure));
     }
 
     public List<PressureResponseDTO> getPressureByDate(LocalDateTime initialDate, LocalDateTime endDate) {
         User loggedUser = authenticatedUser.getCurrentUser();
         List<Pressure> pressureList = pressureRepository.listPressureByDate(loggedUser.getPatient(), initialDate, endDate);
-        List<PressureResponseDTO> responseList = new ArrayList<>();
-        for (Pressure pressure : pressureList) {
-            responseList.add(new PressureResponseDTO(pressure));
-        }
-        return responseList;
+        return pressureList
+                .stream()
+                .map(pressureMapper::toResponseDTO)
+                .toList();
     }
 
     private <T> List<String> validateFields(T entity) {

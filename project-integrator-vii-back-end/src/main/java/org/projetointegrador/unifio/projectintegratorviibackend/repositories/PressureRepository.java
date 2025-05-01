@@ -1,7 +1,7 @@
 package org.projetointegrador.unifio.projectintegratorviibackend.repositories;
 
-import org.projetointegrador.unifio.projectintegratorviibackend.models.Patient;
-import org.projetointegrador.unifio.projectintegratorviibackend.models.Pressure;
+import org.projetointegrador.unifio.projectintegratorviibackend.models.patient.Patient;
+import org.projetointegrador.unifio.projectintegratorviibackend.models.pressure.Pressure;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

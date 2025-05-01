@@ -1,7 +1,7 @@
 package org.projetointegrador.unifio.projectintegratorviibackend.controllers;
 
-import org.projetointegrador.unifio.projectintegratorviibackend.models.dtos.BloodGlucoseRegistrationDTO;
-import org.projetointegrador.unifio.projectintegratorviibackend.models.dtos.BloodGlucoseResponseDTO;
+import org.projetointegrador.unifio.projectintegratorviibackend.models.glucose.BloodGlucoseRegistrationDTO;
+import org.projetointegrador.unifio.projectintegratorviibackend.models.glucose.BloodGlucoseResponseDTO;
 import org.projetointegrador.unifio.projectintegratorviibackend.services.BloodGlucoseService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

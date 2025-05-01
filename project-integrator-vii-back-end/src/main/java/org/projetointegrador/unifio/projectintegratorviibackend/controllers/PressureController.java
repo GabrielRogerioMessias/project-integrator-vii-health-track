@@ -1,7 +1,7 @@
 package org.projetointegrador.unifio.projectintegratorviibackend.controllers;
 
-import org.projetointegrador.unifio.projectintegratorviibackend.models.dtos.PressureRegistrationDTO;
-import org.projetointegrador.unifio.projectintegratorviibackend.models.dtos.PressureResponseDTO;
+import org.projetointegrador.unifio.projectintegratorviibackend.models.pressure.PressureRegistrationDTO;
+import org.projetointegrador.unifio.projectintegratorviibackend.models.pressure.PressureResponseDTO;
 import org.projetointegrador.unifio.projectintegratorviibackend.services.PressureService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

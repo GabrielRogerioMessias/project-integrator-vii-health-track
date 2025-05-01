@@ -2,10 +2,10 @@ package org.projetointegrador.unifio.projectintegratorviibackend.controllers;
 
 
 import org.projetointegrador.unifio.projectintegratorviibackend.models.User;
-import org.projetointegrador.unifio.projectintegratorviibackend.models.dtos.securityDTO.AccountCredentialsDTO;
-import org.projetointegrador.unifio.projectintegratorviibackend.models.dtos.securityDTO.ForgetPasswordDTO;
-import org.projetointegrador.unifio.projectintegratorviibackend.models.dtos.securityDTO.ResetPasswordRequest;
-import org.projetointegrador.unifio.projectintegratorviibackend.models.dtos.securityDTO.TokenDTO;
+import org.projetointegrador.unifio.projectintegratorviibackend.models.security.AccountCredentialsDTO;
+import org.projetointegrador.unifio.projectintegratorviibackend.models.security.ForgetPasswordDTO;
+import org.projetointegrador.unifio.projectintegratorviibackend.models.security.ResetPasswordRequest;
+import org.projetointegrador.unifio.projectintegratorviibackend.models.security.TokenDTO;
 import org.projetointegrador.unifio.projectintegratorviibackend.security.jwt.EmailTokenUtil;
 import org.projetointegrador.unifio.projectintegratorviibackend.services.UserService;
 import org.springframework.http.HttpStatus;

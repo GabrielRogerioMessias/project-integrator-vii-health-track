@@ -50,8 +50,8 @@ public class SecurityConfig {
                         session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(
                         authorizeHttpRequests -> authorizeHttpRequests
-                                .requestMatchers("patients/**").permitAll()
                                 //permitidas
+                                .requestMatchers(HttpMethod.GET, "/patients").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/patients/register-patient").permitAll()
                                 .requestMatchers("auth/login").permitAll()
                                 .requestMatchers("auth/verify").permitAll()
