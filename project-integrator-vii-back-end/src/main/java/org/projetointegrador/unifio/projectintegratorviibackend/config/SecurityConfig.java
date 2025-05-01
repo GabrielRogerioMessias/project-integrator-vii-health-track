@@ -51,6 +51,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         authorizeHttpRequests -> authorizeHttpRequests
                                 //permitidas
+                                .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/webjars/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/patients").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/patients/register-patient").permitAll()
                                 .requestMatchers("auth/login").permitAll()
