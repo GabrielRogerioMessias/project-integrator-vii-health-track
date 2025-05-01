@@ -76,6 +76,7 @@ public class PatientService {
         patient.setWeight(registerData.getWeight());
         patient.setPhone(registerData.getPhone());
         patient.setCreatedAt(new Date());
+        patient.setHeight(registerData.getHeight());
         // creating a user with register data
         List<PermissionEnum> permissions = new ArrayList<>();
         permissions.add(PermissionEnum.PATIENT);
@@ -132,11 +133,10 @@ public class PatientService {
 
     public List<PatientResponseDTO> getAllPatients() {
         List<Patient> patientsList = patientRepository.findAll();
-        List<PatientResponseDTO> patientResponseDTOS = new ArrayList<>();
-        for (Patient x : patientsList) {
-            patientResponseDTOS.add(patientMapper.toResponseDTO(x));
-        }
-        return patientResponseDTOS;
+        return patientsList
+                .stream()
+                .map(patientMapper::toResponseDTO)
+                .toList();
     }
 
     private PasswordEncoder encoderPassword() {

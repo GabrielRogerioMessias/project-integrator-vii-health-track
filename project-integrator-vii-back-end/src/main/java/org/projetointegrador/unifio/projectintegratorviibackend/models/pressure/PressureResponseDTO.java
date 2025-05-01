@@ -15,12 +15,4 @@ public class PressureResponseDTO {
     private Integer diastolic;
     private Integer heartbeat;
     private LocalDateTime measurementTime;
-
-    public PressureResponseDTO(Pressure pressure) {
-        this.id = pressure.getId();
-        this.systolic = pressure.getSystolic();
-        this.diastolic = pressure.getDiastolic();
-        this.heartbeat = pressure.getHeartbeat();
-        this.measurementTime = pressure.getMeasurementTime();
-    }
 }

@@ -13,11 +13,4 @@ public class BloodGlucoseResponseDTO {
     private Integer glucoseValue;
     private LocalDateTime measurementTime;
     private MeasurementContext context;
-
-    public BloodGlucoseResponseDTO(BloodGlucose bloodGlucose) {
-        this.id = bloodGlucose.getId();
-        this.glucoseValue = bloodGlucose.getGlucoseValue();
-        this.measurementTime = bloodGlucose.getMeasurementTime();
-        this.context = bloodGlucose.getContext();
-    }
 }

@@ -31,5 +31,6 @@ public class PatientRegistrationDTO {
     private Double weight;
     @DecimalMin(value = "0.40", message = "please, insert a valid height")
     @DecimalMax(value = "2.70", message = "please, insert a valid height")
+    @NotNull(message = "height of patient may not blank")
     private Double height;
 }
