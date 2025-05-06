@@ -3,10 +3,7 @@ package org.projetointegrador.unifio.projectintegratorviibackend.controllers.exc
 import jakarta.servlet.http.HttpServletRequest;
 import org.projetointegrador.unifio.projectintegratorviibackend.security.exceptions.CustomBadCredentialsException;
 import org.projetointegrador.unifio.projectintegratorviibackend.security.exceptions.InvalidJwtAuthenticationException;
-import org.projetointegrador.unifio.projectintegratorviibackend.services.exceptions.NullEntityFieldException;
-import org.projetointegrador.unifio.projectintegratorviibackend.services.exceptions.ResourceNotFoundException;
-import org.projetointegrador.unifio.projectintegratorviibackend.services.exceptions.UnverifiedEmailException;
-import org.projetointegrador.unifio.projectintegratorviibackend.services.exceptions.UserAlreadyRegistered;
+import org.projetointegrador.unifio.projectintegratorviibackend.services.exceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -62,6 +59,14 @@ public class ControllerExceptionHandler {
     public ResponseEntity<StandardError> unverifiedEmail(UnverifiedEmailException e, HttpServletRequest request) {
         String error = "Email not verified.";
         HttpStatus status = HttpStatus.FORBIDDEN;
+        StandardError err = new StandardError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(status).body(err);
+    }
+
+    @ExceptionHandler(ParametersRequiredException.class)
+    public ResponseEntity<StandardError> parametersRequired(ParametersRequiredException e, HttpServletRequest request) {
+        String error = "Parameters error.";
+        HttpStatus status = HttpStatus.BAD_REQUEST;
         StandardError err = new StandardError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
         return ResponseEntity.status(status).body(err);
     }

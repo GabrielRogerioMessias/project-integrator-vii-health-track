@@ -28,38 +28,30 @@ public class PatientController {
         this.patientService = patientService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<PatientResponseDTO>> getAllPatients() {
-        List<PatientResponseDTO> patients = patientService.getAllPatients();
-        return ResponseEntity.ok().body(patients);
-    }
-
-    @PostMapping(value = "/register-patient")
     @Operation(
             summary = "Salva dados do paciente",
             description = "Registra um novo paciente no sistema a partir dos dados informados",
-            tags = {"patient"},
             responses = {
                     @ApiResponse(responseCode = "201", description = "Paciente registrado com sucesso.", content = @Content(schema = @Schema(implementation = PatientResponseDTO.class))),
                     @ApiResponse(responseCode = "400", description = "Erro ao registrar o paciente", content = @Content(schema = @Schema(implementation = StandardError.class))),
                     @ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content)
             }
     )
+    @PostMapping(value = "/register-patient")
     public ResponseEntity<PatientResponseDTO> registerPatient(@RequestBody PatientRegistrationDTO registerDTO) {
         PatientResponseDTO patient = patientService.registerPatient(registerDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(patient);
     }
 
-    @PutMapping
     @Operation(
             summary = "Atualizar dados do paciente",
             description = "Atualiza os dados do paciente autenticado",
-            tags = {"patient"},
             responses = {
                     @ApiResponse(responseCode = "200", description = "Dados do paciente atualizado com sucesso", content = @Content(schema = @Schema(implementation = PatientUpdateDTO.class))),
                     @ApiResponse(responseCode = "400", description = "Erro ao atualizar os dados do paceinte", content = @Content(schema = @Schema(implementation = StandardError.class)))
             }
     )
+    @PutMapping
     public ResponseEntity<PatientResponseDTO> updatePatient(@RequestBody PatientUpdateDTO patientUpdateDTO) {
         return ResponseEntity.ok().body(this.patientService.updatePatient(patientUpdateDTO));
     }

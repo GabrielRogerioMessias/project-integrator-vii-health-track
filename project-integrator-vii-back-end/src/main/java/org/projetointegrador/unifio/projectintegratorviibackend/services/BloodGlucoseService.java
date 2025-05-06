@@ -10,6 +10,7 @@ import org.projetointegrador.unifio.projectintegratorviibackend.models.mappers.G
 import org.projetointegrador.unifio.projectintegratorviibackend.repositories.BloodGlucoseRepository;
 import org.projetointegrador.unifio.projectintegratorviibackend.repositories.UserRepository;
 import org.projetointegrador.unifio.projectintegratorviibackend.services.exceptions.NullEntityFieldException;
+import org.projetointegrador.unifio.projectintegratorviibackend.services.exceptions.ParametersRequiredException;
 import org.projetointegrador.unifio.projectintegratorviibackend.services.exceptions.ResourceNotFoundException;
 import org.projetointegrador.unifio.projectintegratorviibackend.utils.AuthenticatedUser;
 import org.springframework.stereotype.Service;
@@ -96,6 +97,9 @@ public class BloodGlucoseService {
 
     public List<BloodGlucoseResponseDTO> getGlucoseByDate(LocalDateTime initialDate, LocalDateTime endDate) {
         User loggedUser = authenticatedUser.getCurrentUser();
+        if (initialDate == null || endDate == null) {
+            throw new ParametersRequiredException("Parameters initial date or end date cannot be null or empty.");
+        }
         List<BloodGlucose> glucoseList = bloodGlucoseRepository.listGlucoseByDate(loggedUser.getPatient(), initialDate, endDate);
         return glucoseList
                 .stream()

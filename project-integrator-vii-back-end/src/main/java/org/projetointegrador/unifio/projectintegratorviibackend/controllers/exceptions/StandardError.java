@@ -18,7 +18,7 @@ public class StandardError {
     private Integer status;
     @Schema(description = "Tipo genérico de erro ocorrido", example = "Recurso não encontrado")
     private String error;
-    @Schema(description = "Mensagem detalhada da exceção para auxiliar no debug", example = "Paciente com ID 10 não encontrado")
+    @Schema(description = "Mensagem detalhada da exceção para auxiliar no debug", example = "Entidade com ID 10 não encontrada, Campos vazios ou nulos")
     private String message;
     @Schema(description = "Caminho (URL) da requisição que gerou o erro", example = "/api/patients/10")
     private String path;

@@ -10,6 +10,7 @@ import org.projetointegrador.unifio.projectintegratorviibackend.models.pressure.
 import org.projetointegrador.unifio.projectintegratorviibackend.repositories.PressureRepository;
 import org.projetointegrador.unifio.projectintegratorviibackend.repositories.UserRepository;
 import org.projetointegrador.unifio.projectintegratorviibackend.services.exceptions.NullEntityFieldException;
+import org.projetointegrador.unifio.projectintegratorviibackend.services.exceptions.ParametersRequiredException;
 import org.projetointegrador.unifio.projectintegratorviibackend.services.exceptions.ResourceNotFoundException;
 import org.projetointegrador.unifio.projectintegratorviibackend.utils.AuthenticatedUser;
 import org.springframework.stereotype.Service;
@@ -84,6 +85,9 @@ public class PressureService {
 
     public List<PressureResponseDTO> getPressureByDate(LocalDateTime initialDate, LocalDateTime endDate) {
         User loggedUser = authenticatedUser.getCurrentUser();
+        if (initialDate == null || endDate == null) {
+            throw new ParametersRequiredException("Parameters initial date or end date cannot be null or empty.");
+        }
         List<Pressure> pressureList = pressureRepository.listPressureByDate(loggedUser.getPatient(), initialDate, endDate);
         return pressureList
                 .stream()
