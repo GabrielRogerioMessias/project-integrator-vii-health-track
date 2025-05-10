@@ -1,4 +1,4 @@
-# HealthTracker - Gestão Integrada de Doenças Crônicas  
+# HealthTracker - Gestão Integrada de Doenças Crônicas - Em desenvolvimento
 
  ![Logo do HealthTracker](assets/logo.jpeg)
  
@@ -60,16 +60,7 @@ Ideal para clínicas, hospitais e usuários individuais que buscam praticidade e
 - **Backend**: Java, MySQL.  
 - **Documentação da API**: Swagger
 
----
 
-## 📥 Instalação  
-```bash  
-# Clone o repositório  
-git clone https://github.com/seu-usuario/healthtracker.git  
-
-# Instale as dependências  
-cd healthtracker  
-npm install  
 
 # Configure as variáveis de ambiente  
 cp .env.example .env  
