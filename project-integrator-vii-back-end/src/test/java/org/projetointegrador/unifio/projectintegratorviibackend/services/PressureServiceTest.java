@@ -206,6 +206,7 @@ public class PressureServiceTest {
         assertEquals(uptPressure.getSystolic(), result.getSystolic());
         verify(pressureRepository, times(1)).save(oldPressure);
         verify(pressureRepository, times(1)).findPressureById(patientMock, idPressure);
+        assertEquals(oldPressure.getSystolic(), result.getSystolic());
     }
 
     @Test
@@ -249,7 +250,7 @@ public class PressureServiceTest {
     }
 
     @Test
-    @DisplayName("getPressureByDate: quando um ou mais dos parametros de busca são nulos uma exceção deve ser lançada")
+    @DisplayName("getPressureByDate: quando um ou mais dos parametros de busca são nulos uma exceção é lançada")
     void getPressureByDateCase2() {
         assertThrows(ParametersRequiredException.class, () -> pressureService.getPressureByDate(null, null));
         verifyNoInteractions(pressureRepository);
