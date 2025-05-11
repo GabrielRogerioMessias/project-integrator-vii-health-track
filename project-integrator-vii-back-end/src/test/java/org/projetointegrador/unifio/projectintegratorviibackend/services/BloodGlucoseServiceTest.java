@@ -1,5 +1,7 @@
 package org.projetointegrador.unifio.projectintegratorviibackend.services;
 
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ValidationException;
 import jakarta.validation.Validator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -16,10 +18,15 @@ import org.projetointegrador.unifio.projectintegratorviibackend.models.mappers.G
 import org.projetointegrador.unifio.projectintegratorviibackend.models.patient.Patient;
 import org.projetointegrador.unifio.projectintegratorviibackend.repositories.BloodGlucoseRepository;
 import org.projetointegrador.unifio.projectintegratorviibackend.repositories.UserRepository;
+import org.projetointegrador.unifio.projectintegratorviibackend.services.exceptions.NullEntityFieldException;
+import org.projetointegrador.unifio.projectintegratorviibackend.services.exceptions.ResourceNotFoundException;
 import org.projetointegrador.unifio.projectintegratorviibackend.utils.AuthenticatedUser;
+import org.springframework.security.core.parameters.P;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Optional;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -38,10 +45,16 @@ public class BloodGlucoseServiceTest {
     private GlucoseMapper glucoseMapper;
     @InjectMocks
     private BloodGlucoseService glucoseService;
+    User userMock;
+    Patient patientMock;
 
     @BeforeEach
     void setUpTests() {
         MockitoAnnotations.openMocks(this);
+        userMock = new User();
+        patientMock = new Patient();
+        userMock.setPatient(patientMock);
+        patientMock.setGlucoseList(new ArrayList<>());
         glucoseService = new BloodGlucoseService(bloodGlucoseRepository, authenticatedUser, validator, userRepository, glucoseMapper);
     }
 
@@ -53,12 +66,6 @@ public class BloodGlucoseServiceTest {
         dto.setGlucoseValue(120);
         dto.setContext(MeasurementContext.JEJUM);
         dto.setMeasurementTime(LocalDateTime.now());
-
-        User userMock = new User();
-        Patient patientMock = new Patient();
-
-        userMock.setPatient(patientMock);
-        patientMock.setGlucoseList(new ArrayList<>());
 
         BloodGlucose savedEntity = new BloodGlucose();
         savedEntity.setContext(dto.getContext());
@@ -83,9 +90,45 @@ public class BloodGlucoseServiceTest {
     }
 
     @Test
-    @DisplayName("when an new blood glucose not is successfully registered, ant an NullEntityFieldException is throwed")
-    void shouldRegisterNewBloodGlucoseNotSuccessfully() {
+    @DisplayName("registerBloodGlucoseCase: falha ao tentar registrar uma nova glicose com dados inválidos ")
+    void registerBloodGlucoseCase2() {
+        BloodGlucoseRegistrationDTO dto = new BloodGlucoseRegistrationDTO();
+        ConstraintViolation<BloodGlucoseRegistrationDTO> violation = mock(ConstraintViolation.class);
+        when(violation.getMessage()).thenReturn("glucoseValue of Glucose may not blank or null");
+        when(validator.validate(dto)).thenReturn(Set.of(violation));
+
+        assertThrows(NullEntityFieldException.class, () -> glucoseService.registerGlucose(dto));
+        verifyNoInteractions(bloodGlucoseRepository);
+        verify(userRepository, never()).save(any(User.class));
     }
 
+    @Test
+    void deleteGlucoseCase1() {
+        long idGlucose = 1L;
+        BloodGlucose glucose = new BloodGlucose();
+
+        when(authenticatedUser.getCurrentUser()).thenReturn(userMock);
+        when(bloodGlucoseRepository.findBloodGlucoseById(patientMock, idGlucose)).thenReturn(Optional.of(glucose));
+        doNothing().when(bloodGlucoseRepository).delete(glucose);
+
+        glucoseService.deleteGlucose(idGlucose);
+
+        verify(bloodGlucoseRepository).delete(glucose);
+        verify(authenticatedUser).getCurrentUser();
+        verify(userRepository).save(userMock);
+    }
+
+    @Test
+    @DisplayName("deleteGlucose: a glicose a ser deletada não é encontrada, uma exceção deve ser lançada")
+    void deleteGlucoseCase2() {
+        long idGlucose = 1L;
+        when(authenticatedUser.getCurrentUser()).thenReturn(userMock);
+        when(bloodGlucoseRepository.findBloodGlucoseById(patientMock, idGlucose)).thenReturn(Optional.empty());
+        assertThrows(ResourceNotFoundException.class, () -> glucoseService.findGlucoseById(idGlucose));
+
+        verifyNoInteractions(glucoseMapper);
+        verify(bloodGlucoseRepository, never()).delete(any(BloodGlucose.class));
+        verify(userRepository, never()).save(userMock);
+    }
 
 }
