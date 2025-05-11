@@ -137,11 +137,16 @@ public class PressureServiceTest {
     void deletePressureCase1() {
         long idPressure = 1;
         Pressure pressure = new Pressure();
+
         when(authenticatedUser.getCurrentUser()).thenReturn(userMock);
         when(pressureRepository.findPressureById(patientMock, idPressure)).thenReturn(Optional.of(pressure));
         doNothing().when(pressureRepository).delete(pressure);
+
         pressureService.deletePressure(idPressure);
+
         verify(pressureRepository, times(1)).delete(pressure);
+        verify(authenticatedUser).getCurrentUser();
+        verify(userRepository).save(userMock);
     }
 
     @Test
