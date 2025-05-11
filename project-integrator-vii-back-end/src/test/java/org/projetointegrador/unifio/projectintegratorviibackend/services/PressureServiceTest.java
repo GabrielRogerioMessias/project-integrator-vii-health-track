@@ -17,6 +17,7 @@ import org.projetointegrador.unifio.projectintegratorviibackend.models.pressure.
 import org.projetointegrador.unifio.projectintegratorviibackend.repositories.PressureRepository;
 import org.projetointegrador.unifio.projectintegratorviibackend.repositories.UserRepository;
 import org.projetointegrador.unifio.projectintegratorviibackend.services.exceptions.NullEntityFieldException;
+import org.projetointegrador.unifio.projectintegratorviibackend.services.exceptions.ParametersRequiredException;
 import org.projetointegrador.unifio.projectintegratorviibackend.services.exceptions.ResourceNotFoundException;
 import org.projetointegrador.unifio.projectintegratorviibackend.utils.AuthenticatedUser;
 
@@ -192,14 +193,13 @@ public class PressureServiceTest {
 
         when(authenticatedUser.getCurrentUser()).thenReturn(userMock);
         when(pressureRepository.findPressureById(patientMock, idPressure)).thenReturn(Optional.of(oldPressure));
-        when(authenticatedUser.getCurrentUser()).thenReturn(userMock);
         when(pressureRepository.save(any(Pressure.class))).thenReturn(oldPressure);
         when(pressureMapper.toResponseDTO(oldPressure)).thenReturn(dto);
 
         PressureResponseDTO result = pressureService.updatePressure(uptPressure, idPressure);
 
         assertEquals(uptPressure.getSystolic(), result.getSystolic());
-        verify(pressureRepository,times(1)).save(oldPressure);
+        verify(pressureRepository, times(1)).save(oldPressure);
         verify(pressureRepository, times(1)).findPressureById(patientMock, idPressure);
     }
 
@@ -210,8 +210,44 @@ public class PressureServiceTest {
         PressureRegistrationDTO upt = new PressureRegistrationDTO();
         when(authenticatedUser.getCurrentUser()).thenReturn(userMock);
         when(pressureRepository.findPressureById(patientMock, idPressure)).thenReturn(Optional.empty());
-        assertThrows(ResourceNotFoundException.class, () -> pressureService.updatePressure(upt,idPressure));
+        assertThrows(ResourceNotFoundException.class, () -> pressureService.updatePressure(upt, idPressure));
         verify(pressureRepository, never()).save(any(Pressure.class));
         verify(pressureRepository, times(1)).findPressureById(patientMock, idPressure);
+    }
+
+    @Test
+    @DisplayName("getPressureByDate: retorna uma lista de registros de pressão entre duas datas")
+    void getPressureByDateCase1() {
+        LocalDateTime initialDate = LocalDateTime.of(2025, 5, 10, 8, 0);
+        LocalDateTime endDate = LocalDateTime.of(2025, 5, 10, 8, 11);
+
+        Pressure pressureOne = new Pressure();
+        pressureOne.setMeasurementTime(LocalDateTime.of(2025, 5, 10, 8, 10));
+        Pressure pressureTwo = new Pressure();
+        pressureTwo.setMeasurementTime(LocalDateTime.of(2025, 5, 10, 8, 5));
+
+        List<Pressure> pressureList = List.of(pressureOne, pressureTwo);
+
+        PressureResponseDTO dto = new PressureResponseDTO();
+
+        when(authenticatedUser.getCurrentUser()).thenReturn(userMock);
+        when(pressureRepository.listPressureByDate(patientMock, initialDate, endDate)).thenReturn(pressureList);
+        when(pressureMapper.toResponseDTO(any(Pressure.class))).thenReturn(dto);
+        //chamando o serviço
+        List<PressureResponseDTO> result = pressureService.getPressureByDate(initialDate, endDate);
+        //verificando se todos os itens  da regra de negócio estão sendo chgamados
+        verify(pressureRepository, times(1)).listPressureByDate(patientMock, initialDate, endDate);
+        verify(pressureMapper, times(2)).toResponseDTO(any(Pressure.class));
+        verify(authenticatedUser, times(1)).getCurrentUser();
+        assertNotNull(result, "o resultado não pode ser nulo");
+        assertEquals(2, result.size());
+    }
+
+    @Test
+    @DisplayName("getPressureByDate: quando um ou mais dos parametros de busca são nulos uma exceção deve ser lançada")
+    void getPressureByDateCase2() {
+        assertThrows(ParametersRequiredException.class, () -> pressureService.getPressureByDate(null, null));
+        verifyNoInteractions(pressureRepository);
+        verifyNoInteractions(pressureMapper);
     }
 }
