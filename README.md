@@ -63,7 +63,4 @@ Ideal para clínicas, hospitais e usuários individuais que buscam praticidade e
 
 
 # Configure as variáveis de ambiente  
-cp .env.example .env  
-
-# Inicie o servidor  
-npm run dev  
+cp .env.example .env
